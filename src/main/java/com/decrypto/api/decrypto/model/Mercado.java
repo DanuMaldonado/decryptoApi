@@ -2,24 +2,19 @@ package com.decrypto.api.decrypto.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Mercado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
 
+    @NotEmpty
     private String codigo;
 
+    @NotEmpty
     private String descripcion;
 
     @ManyToOne
@@ -29,22 +24,51 @@ public class Mercado {
     @ManyToMany(mappedBy = "mercados")
     private List<Comitente> comitentes = new ArrayList<>();
 
-	public String getCodigo() {
-		return codigo;
-	}
+    // Constructor vacío
+    public Mercado() {}
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
+    // Constructor con parámetros
+    public Mercado(String codigo, String descripcion, Pais pais) {
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.pais = pais;
+    }
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+    public String getCodigo() {
+        return codigo;
+    }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public Pais getPais() {
+        return pais;
+    }
+
+    public void setPais(Pais pais) {
+        this.pais = pais;
+    }
+
+    public List<Comitente> getComitentes() {
+        return comitentes;
+    }
+
+    public void setComitentes(List<Comitente> comitentes) {
+        this.comitentes = comitentes;
+    }
+
+    @Override
+    public String toString() {
+        return "Mercado{id=" + id + ", codigo='" + codigo + '\'' + ", descripcion='" + descripcion + '\'' + ", pais=" + pais + '}';
+    }
 
 }
-

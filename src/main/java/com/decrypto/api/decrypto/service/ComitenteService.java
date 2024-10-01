@@ -1,6 +1,7 @@
 package com.decrypto.api.decrypto.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,7 @@ public class ComitenteService {
     public List<Comitente> getAllComitentes() {
         return comitenteRepository.findAll();
     }
+    
     
     public List<StatsDTO> getComitenteStats() {
         List<StatsDTO> stats = new ArrayList<>();

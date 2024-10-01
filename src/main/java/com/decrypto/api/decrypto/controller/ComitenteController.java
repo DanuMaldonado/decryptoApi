@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.decrypto.api.decrypto.dto.StatsDTO;
 import com.decrypto.api.decrypto.model.Comitente;
 import com.decrypto.api.decrypto.model.NombrePais;
 import com.decrypto.api.decrypto.service.ComitenteService;
@@ -28,7 +29,7 @@ public class ComitenteController {
         Comitente created = comitenteService.saveComitente(comitente);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
-    
+    @GetMapping("/pais/{pais}")
     public ResponseEntity<List<Comitente>> getComitentesByPais(@PathVariable NombrePais pais) {
         List<Comitente> comitentes = comitenteService.getComitentesByPais(pais);
         if (comitentes.isEmpty()) {
@@ -37,9 +38,10 @@ public class ComitenteController {
         return ResponseEntity.ok(comitentes);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Comitente>> getAllComitentes() {
-        return ResponseEntity.ok(comitenteService.getAllComitentes());
+    @GetMapping("/stats")
+    public ResponseEntity<List<StatsDTO>> getComitenteStats() {
+        List<StatsDTO> stats = comitenteService.getComitenteStats();
+        return ResponseEntity.ok(stats);
     }
 
 }
