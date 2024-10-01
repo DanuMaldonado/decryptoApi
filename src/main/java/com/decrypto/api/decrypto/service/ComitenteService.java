@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.decrypto.api.decrypto.dto.CountryStatsDTO;
 import com.decrypto.api.decrypto.dto.MarketStatsDTO;
-import com.decrypto.api.decrypto.dto.StatsDTO;
 import com.decrypto.api.decrypto.model.Comitente;
 import com.decrypto.api.decrypto.model.Mercado;
 import com.decrypto.api.decrypto.model.NombrePais;
@@ -35,34 +35,49 @@ public class ComitenteService {
         return comitenteRepository.findAll();
     }
     
-    
-    public List<StatsDTO> getComitenteStats() {
-        List<StatsDTO> stats = new ArrayList<>();
+   
+    public List<CountryStatsDTO> calculateStatistics() {
+        List<Comitente> comitentes = getAllComitentes(); // Obtener comitentes
 
-        // Supongamos que tenemos listas de comitentes por país y mercado ya obtenidas
-        List<Comitente> comitentesArgentina = comitenteRepository.findByPais(NombrePais.ARGENTINA);
-        List<Comitente> comitentesUruguay = comitenteRepository.findByPais(NombrePais.URUGUAY);
+        Map<String, Map<String, Double>> statsMap = new HashMap<>();
 
-        // Calcular porcentaje para Argentina
-        Map<String, Double> argentinaMarketStats = calcularPorcentajes(comitentesArgentina);
-        List<MarketStatsDTO> argentinaMarketDTOs = argentinaMarketStats.entrySet().stream()
-            .map(entry -> new MarketStatsDTO(entry.getKey(), entry.getValue()))
-            .collect(Collectors.toList());
+        // Calcular las estadísticas
+        for (Comitente comitente : comitentes) {
+            for (Mercado mercado : comitente.getMercados()) {
+                String country = mercado.getPais().getNombre().toString();
+                String marketCode = mercado.getCodigo();
 
-        stats.add(new StatsDTO("Argentina", argentinaMarketDTOs));
+                statsMap.putIfAbsent(country, new HashMap<>());
+                statsMap.get(country).put(marketCode, statsMap.get(country).getOrDefault(marketCode, 0.0) + 1);
+            }
+        }
 
-        // Calcular porcentaje para Uruguay
-        Map<String, Double> uruguayMarketStats = calcularPorcentajes(comitentesUruguay);
-        List<MarketStatsDTO> uruguayMarketDTOs = uruguayMarketStats.entrySet().stream()
-            .map(entry -> new MarketStatsDTO(entry.getKey(), entry.getValue()))
-            .collect(Collectors.toList());
+        // Calcular porcentajes
+        List<CountryStatsDTO> countryStats = new ArrayList<>();
+        for (Map.Entry<String, Map<String, Double>> entry : statsMap.entrySet()) {
+            String country = entry.getKey();
+            Map<String, Double> marketCounts = entry.getValue();
 
-        stats.add(new StatsDTO("Uruguay", uruguayMarketDTOs));
+            double total = marketCounts.values().stream().mapToDouble(Double::doubleValue).sum();
+            List<Map<String, MarketStatsDTO>> marketList = new ArrayList<>();
 
-        return stats;
+            for (Map.Entry<String, Double> marketEntry : marketCounts.entrySet()) {
+               
+                double percentage = (marketEntry.getValue() / total) * 100;
+
+                Map<String, MarketStatsDTO> marketStats = new HashMap<>();
+                marketStats.put(country, new MarketStatsDTO(percentage));
+                marketList.add(marketStats);
+            }
+
+            countryStats.add(new CountryStatsDTO(country, marketList));
+        }
+
+        return countryStats;
     }
 
-    private Map<String, Double> calcularPorcentajes(List<Comitente> comitentes) {
+
+    /*private Map<String, Double> calcularPorcentajes(List<Comitente> comitentes) {
         // Lógica para calcular el porcentaje de comitentes por mercado
         Map<String, Long> countByMarket = comitentes.stream()
             .flatMap(comitente -> comitente.getMercados().stream())
@@ -75,7 +90,7 @@ public class ComitenteService {
                 Map.Entry::getKey,
                 entry -> (entry.getValue() * 100.0) / totalComitentes
             ));
-    }
+    }*/
 
     public List<Comitente> getComitentesByPais(NombrePais pais) {
         return comitenteRepository.findByPais(pais);

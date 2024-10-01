@@ -3,6 +3,8 @@ package com.decrypto.api.decrypto.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ public class Comitente {
       name = "comitente_mercado", 
       joinColumns = @JoinColumn(name = "comitente_id"), 
       inverseJoinColumns = @JoinColumn(name = "mercado_id"))
+    @JsonManagedReference
     private List<Mercado> mercados = new ArrayList<>();
 
     // Constructor vacío

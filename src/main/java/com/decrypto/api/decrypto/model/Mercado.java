@@ -2,6 +2,9 @@ package com.decrypto.api.decrypto.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -22,6 +25,7 @@ public class Mercado {
     private Pais pais;
 
     @ManyToMany(mappedBy = "mercados")
+    @JsonBackReference 
     private List<Comitente> comitentes = new ArrayList<>();
 
     // Constructor vacío

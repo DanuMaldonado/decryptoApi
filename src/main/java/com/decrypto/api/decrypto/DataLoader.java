@@ -53,7 +53,7 @@ public class DataLoader implements CommandLineRunner {
         Mercado mercadoUFEX = new Mercado();
         mercadoUFEX.setCodigo("UFEX");
         mercadoUFEX.setDescripcion("Mercado de Futuros y Opciones");
-        mercadoUFEX.setPais(argentina);
+        mercadoUFEX.setPais(uruguay);
         mercadoRepository.save(mercadoUFEX);
 
         // Agregar comitentes
