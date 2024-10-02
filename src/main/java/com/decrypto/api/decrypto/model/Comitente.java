@@ -22,16 +22,16 @@ public class Comitente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+	@Column(unique = true)
     @NotEmpty // Añadir validación
     private String descripcion;
 
     @ManyToMany
+    @JsonManagedReference
     @JoinTable(
       name = "comitente_mercado", 
       joinColumns = @JoinColumn(name = "comitente_id"), 
       inverseJoinColumns = @JoinColumn(name = "mercado_id"))
-    @JsonManagedReference
     private List<Mercado> mercados = new ArrayList<>();
 
     // Constructor vacío
@@ -58,6 +58,14 @@ public class Comitente {
     public void setMercados(List<Mercado> mercados) {
         this.mercados = mercados;
     }
+    
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
     // Override toString(), equals(), and hashCode()
     @Override

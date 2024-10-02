@@ -5,37 +5,72 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.decrypto.api.decrypto.dto.ComitenteDTO;
 import com.decrypto.api.decrypto.dto.StatsDTO;
 import com.decrypto.api.decrypto.model.Comitente;
 import com.decrypto.api.decrypto.model.Mercado;
 import com.decrypto.api.decrypto.model.NombrePais;
+import com.decrypto.api.decrypto.model.Pais;
 import com.decrypto.api.decrypto.repository.ComitenteRepository;
+import com.decrypto.api.decrypto.repository.MercadoRepository;
+import com.decrypto.api.decrypto.repository.PaisRepository;
 
 @Service
 public class ComitenteService {
     
-    @Autowired
-    private ComitenteRepository comitenteRepository;
+    private final ComitenteRepository comitenteRepository;
+    private final MercadoRepository mercadoRepository;
     
-    public Comitente saveComitente(Comitente comitente) {
+    public ComitenteService(ComitenteRepository comitenteRepository, MercadoRepository mercadoRepository) {
+        this.comitenteRepository = comitenteRepository;
+        this.mercadoRepository = mercadoRepository;
+    }
+    
+    public ComitenteDTO save(ComitenteDTO comitenteDTO) {
+        List<Mercado> mercados = comitenteDTO.getMercadoIds().stream()
+            .map(id -> mercadoRepository.findById(id).orElseThrow(() -> new RuntimeException("Mercado no encontrado")))
+            .collect(Collectors.toList());
+        
+        Comitente comitente = new Comitente(comitenteDTO.getDescripcion(), mercados);
+        Comitente savedComitente = comitenteRepository.save(comitente);
+
+        return new ComitenteDTO(savedComitente.getId(), savedComitente.getDescripcion(),
+                savedComitente.getMercados().stream().map(Mercado::getId).collect(Collectors.toList()));
+    }
+    
+    
+    /*public Comitente saveComitente(Comitente comitente) {
         Optional<Comitente> existing = comitenteRepository.findByDescripcion(comitente.getDescripcion());
         if (existing.isPresent()) {
             throw new IllegalArgumentException("El comitente ya existe.");
         }
+            
+            Pais pais = comitente.getMercados().stream()
+                    .map(Mercado::getPais)
+                    .findFirst() // Asumimos que todos los mercados tienen el mismo país
+                    .orElseThrow(() -> new IllegalArgumentException("El comitente debe tener al menos un mercado con un país asociado."));
+                
+                Optional<Pais> existingPais = paisRepository.findByNombre(pais.getNombre());
+                if (existingPais.isPresent()) {
+                    comitente.getMercados().forEach(mercado -> mercado.setPais(existingPais.get()));
+                }
+
+                // Verificar si los mercados ya existen
+                comitente.getMercados().forEach(mercado -> {
+                    Optional<Mercado> existingMercado = mercadoRepository.findByCodigo(mercado.getCodigo());
+                    if (existingMercado.isPresent()) {
+                        mercado.setId(existingMercado.get().getId());
+                    }
+                });
+        
         return comitenteRepository.save(comitente);
-    }
-
-    public List<Comitente> getAllComitentes() {
-        return comitenteRepository.findAll();
-    }
+    }*/
     
-
     public List<StatsDTO> getStats() {
         List<StatsDTO> stats = new ArrayList<>();
 
@@ -82,25 +117,27 @@ public class ComitenteService {
         return stats;
     }
 
-
-
-    /*private Map<String, Double> calcularPorcentajes(List<Comitente> comitentes) {
-        // Lógica para calcular el porcentaje de comitentes por mercado
-        Map<String, Long> countByMarket = comitentes.stream()
-            .flatMap(comitente -> comitente.getMercados().stream())
-            .collect(Collectors.groupingBy(Mercado::getCodigo, Collectors.counting()));
-
-        long totalComitentes = comitentes.size();
-
-        return countByMarket.entrySet().stream()
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                entry -> (entry.getValue() * 100.0) / totalComitentes
-            ));
-    }*/
-
     public List<Comitente> getComitentesByPais(NombrePais pais) {
         return comitenteRepository.findByPais(pais);
     }
+    
+    public Optional<Comitente> getComitenteById(Long id) {
+        return comitenteRepository.findById(id);
+    }
+    
+    public List<Comitente> getAllComitentes() {
+        return comitenteRepository.findAll();
+    }
+
+    public Comitente save(Comitente comitente) {
+        if (comitenteRepository.findByDescripcion(comitente.getDescripcion()).isPresent()) {
+            throw new RuntimeException("Comitente con esta descripción ya existe.");
+        }
+        return comitenteRepository.save(comitente);
+    }
+
+	public void deleteById(Long id) {
+		comitenteRepository.deleteById(id);
+	}
 
 }

@@ -64,6 +64,11 @@ public class DataLoader implements CommandLineRunner {
         comitente1.setDescripcion("Comitente 1");
         comitente1.getMercados().add(mercadoMAE);
         comitenteRepository.save(comitente1);
+        
+        Comitente comitente1B = new Comitente();
+        comitente1B.setDescripcion("Comitente 1B");
+        comitente1B.getMercados().add(mercadoMAE);
+        comitenteRepository.save(comitente1B);
 
         Comitente comitente2 = new Comitente();
         comitente2.setDescripcion("Comitente 2");

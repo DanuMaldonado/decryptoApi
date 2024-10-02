@@ -14,7 +14,7 @@ public class Mercado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
+	@NotEmpty
     private String codigo;
 
     @NotEmpty
@@ -25,7 +25,7 @@ public class Mercado {
     private Pais pais;
 
     @ManyToMany(mappedBy = "mercados")
-    @JsonBackReference 
+    @JsonBackReference
     private List<Comitente> comitentes = new ArrayList<>();
     
     private Double porcentaje;
@@ -39,6 +39,14 @@ public class Mercado {
         this.descripcion = descripcion;
         this.pais = pais;
     }
+    
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
     public String getCodigo() {
         return codigo;
