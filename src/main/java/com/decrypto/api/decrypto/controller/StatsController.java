@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.decrypto.api.decrypto.dto.CountryStatsDTO;
+import com.decrypto.api.decrypto.dto.StatsDTO;
 import com.decrypto.api.decrypto.service.ComitenteService;
 
 @RestController
@@ -19,9 +19,11 @@ public class StatsController {
     private ComitenteService comitenteService;
 
     @GetMapping("/stats")
-    public ResponseEntity<List<CountryStatsDTO>> getStats() {
-        List<CountryStatsDTO> stats = comitenteService.calculateStatistics();
+    public ResponseEntity<List<StatsDTO>> getStats() {
+    	List<StatsDTO> stats = comitenteService.getStats();
         return ResponseEntity.ok(stats);
     }
+    
+ // List<CountryStatsDTO> stats = comitenteService.calculateStatistics();
     
 }

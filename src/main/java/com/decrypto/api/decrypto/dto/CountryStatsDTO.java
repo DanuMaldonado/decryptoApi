@@ -28,5 +28,4 @@ public class CountryStatsDTO {
 		this.market = market;
 	}
 
-    // Getters y Setters
 }

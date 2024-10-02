@@ -2,11 +2,12 @@ package com.decrypto.api.decrypto.dto;
 
 public class MarketStatsDTO {
 
-   // private String marketName;
+    private String marketName;
     private Double percentage;
 
-    public MarketStatsDTO(Double percentage) {
-        //this.setMarketName(marketName);
+    public MarketStatsDTO(String marketName, Double percentage) {
+
+    	this.setMarketName(marketName);
         this.setPercentage(percentage);
     }
 
@@ -17,6 +18,16 @@ public class MarketStatsDTO {
 
 	public void setPercentage(Double percentage) {
 		this.percentage = percentage;
+	}
+
+
+	public String getMarketName() {
+		return marketName;
+	}
+
+
+	public void setMarketName(String marketName) {
+		this.marketName = marketName;
 	}
 
 }

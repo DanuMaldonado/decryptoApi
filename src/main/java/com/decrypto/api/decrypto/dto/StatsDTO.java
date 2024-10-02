@@ -1,15 +1,16 @@
 package com.decrypto.api.decrypto.dto;
 
 import java.util.List;
+import java.util.Map;
 
 public class StatsDTO {
     
     private String country;
-    private List<MarketStatsDTO> market;
+    private List<Map<String, Map<String, String>>> market;
 
-    public StatsDTO(String country, List<MarketStatsDTO> market) {
-        this.setCountry(country);
-        this.setMarket(market);
+    public StatsDTO(String country, List<Map<String, Map<String, String>>> market) {
+        this.country = country;
+        this.market = market;
     }
 
 	public String getCountry() {
@@ -20,11 +21,11 @@ public class StatsDTO {
 		this.country = country;
 	}
 
-	public List<MarketStatsDTO> getMarket() {
-		return market;
-	}
+    public List<Map<String, Map<String, String>>> getMarket() {
+        return market;
+    }
 
-	public void setMarket(List<MarketStatsDTO> market) {
-		this.market = market;
-	}
+    public void setMarket(List<Map<String, Map<String, String>>> market) {
+        this.market = market;
+    }
 }

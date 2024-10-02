@@ -42,18 +42,21 @@ public class DataLoader implements CommandLineRunner {
         mercadoMAE.setCodigo("MAE");
         mercadoMAE.setDescripcion("Mercado Abierto Electrónico");
         mercadoMAE.setPais(argentina);
+        mercadoMAE.setPorcentaje(15.20);
         mercadoRepository.save(mercadoMAE);
 
         Mercado mercadoROFEX = new Mercado();
         mercadoROFEX.setCodigo("ROFEX");
         mercadoROFEX.setDescripcion("Mercado a Término de Rosario");
         mercadoROFEX.setPais(argentina);
+        mercadoROFEX.setPorcentaje(40.75);
         mercadoRepository.save(mercadoROFEX);
         
         Mercado mercadoUFEX = new Mercado();
         mercadoUFEX.setCodigo("UFEX");
         mercadoUFEX.setDescripcion("Mercado de Futuros y Opciones");
         mercadoUFEX.setPais(uruguay);
+        mercadoUFEX.setPorcentaje(44.05);
         mercadoRepository.save(mercadoUFEX);
 
         // Agregar comitentes

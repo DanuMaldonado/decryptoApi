@@ -27,6 +27,8 @@ public class Mercado {
     @ManyToMany(mappedBy = "mercados")
     @JsonBackReference 
     private List<Comitente> comitentes = new ArrayList<>();
+    
+    private Double porcentaje;
 
     // Constructor vacío
     public Mercado() {}
@@ -69,10 +71,19 @@ public class Mercado {
     public void setComitentes(List<Comitente> comitentes) {
         this.comitentes = comitentes;
     }
+    
+	public Double getPorcentaje() {
+		return porcentaje;
+	}
+
+	public void setPorcentaje(Double porcentaje) {
+		this.porcentaje = porcentaje;
+	}
 
     @Override
     public String toString() {
         return "Mercado{id=" + id + ", codigo='" + codigo + '\'' + ", descripcion='" + descripcion + '\'' + ", pais=" + pais + '}';
     }
+
 
 }

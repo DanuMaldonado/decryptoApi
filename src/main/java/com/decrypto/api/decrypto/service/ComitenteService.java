@@ -10,8 +10,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.decrypto.api.decrypto.dto.CountryStatsDTO;
-import com.decrypto.api.decrypto.dto.MarketStatsDTO;
+
+import com.decrypto.api.decrypto.dto.StatsDTO;
 import com.decrypto.api.decrypto.model.Comitente;
 import com.decrypto.api.decrypto.model.Mercado;
 import com.decrypto.api.decrypto.model.NombrePais;
@@ -35,46 +35,53 @@ public class ComitenteService {
         return comitenteRepository.findAll();
     }
     
-   
-    public List<CountryStatsDTO> calculateStatistics() {
-        List<Comitente> comitentes = getAllComitentes(); // Obtener comitentes
 
-        Map<String, Map<String, Double>> statsMap = new HashMap<>();
+    public List<StatsDTO> getStats() {
+        List<StatsDTO> stats = new ArrayList<>();
 
-        // Calcular las estadísticas
+        // Obtener comitentes y sus mercados
+        List<Comitente> comitentes = comitenteRepository.findAll();
+
+        // Agrupar por país y mercado
+        Map<String, Map<String, Double>> countryMarketMap = new HashMap<>();
+
         for (Comitente comitente : comitentes) {
             for (Mercado mercado : comitente.getMercados()) {
-                String country = mercado.getPais().getNombre().toString();
-                String marketCode = mercado.getCodigo();
+                String countryName = mercado.getPais().getNombre().toString();
+                String marketCode = mercado.getCodigo(); // Obtener el código del mercado
+                Double percentage = mercado.getPorcentaje(); // Obtener el porcentaje
 
-                statsMap.putIfAbsent(country, new HashMap<>());
-                statsMap.get(country).put(marketCode, statsMap.get(country).getOrDefault(marketCode, 0.0) + 1);
+                // Agregar datos al mapa
+                countryMarketMap
+                    .computeIfAbsent(countryName, k -> new HashMap<>())
+                    .put(marketCode, percentage);
             }
         }
 
-        // Calcular porcentajes
-        List<CountryStatsDTO> countryStats = new ArrayList<>();
-        for (Map.Entry<String, Map<String, Double>> entry : statsMap.entrySet()) {
+        // Construir la lista de StatsDTO
+        for (Map.Entry<String, Map<String, Double>> entry : countryMarketMap.entrySet()) {
             String country = entry.getKey();
-            Map<String, Double> marketCounts = entry.getValue();
+            Map<String, Double> marketData = entry.getValue();
+            List<Map<String, Map<String, String>>> marketStats = new ArrayList<>(); // Cambiamos aquí
 
-            double total = marketCounts.values().stream().mapToDouble(Double::doubleValue).sum();
-            List<Map<String, MarketStatsDTO>> marketList = new ArrayList<>();
+            for (Map.Entry<String, Double> marketEntry : marketData.entrySet()) {
+                String marketName = marketEntry.getKey();
+                Double marketPercentage = marketEntry.getValue();
 
-            for (Map.Entry<String, Double> marketEntry : marketCounts.entrySet()) {
-               
-                double percentage = (marketEntry.getValue() / total) * 100;
-
-                Map<String, MarketStatsDTO> marketStats = new HashMap<>();
-                marketStats.put(country, new MarketStatsDTO(percentage));
-                marketList.add(marketStats);
+                // Crear un mapa para cada mercado
+                Map<String, Map<String, String>> marketMap = new HashMap<>();
+                Map<String, String> percentageMap = new HashMap<>();
+                percentageMap.put("percentage", String.valueOf(marketPercentage)); // Convertir a String
+                marketMap.put(marketName, percentageMap);
+                marketStats.add(marketMap); // Agregar el mapa del mercado a la lista
             }
 
-            countryStats.add(new CountryStatsDTO(country, marketList));
+            stats.add(new StatsDTO(country, marketStats)); // Agregar a la lista de resultados
         }
 
-        return countryStats;
+        return stats;
     }
+
 
 
     /*private Map<String, Double> calcularPorcentajes(List<Comitente> comitentes) {
