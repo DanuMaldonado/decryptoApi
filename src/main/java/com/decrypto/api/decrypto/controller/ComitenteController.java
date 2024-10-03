@@ -1,6 +1,7 @@
 package com.decrypto.api.decrypto.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.decrypto.api.decrypto.dto.ComitenteDTO;
 import com.decrypto.api.decrypto.dto.StatsDTO;
 import com.decrypto.api.decrypto.model.Comitente;
+import com.decrypto.api.decrypto.model.Mercado;
 import com.decrypto.api.decrypto.model.NombrePais;
 import com.decrypto.api.decrypto.service.ComitenteService;
+import com.decrypto.api.decrypto.service.MercadoService;
 
 @RestController
 @RequestMapping("/api")
@@ -26,6 +29,9 @@ public class ComitenteController {
     
     @Autowired
     private ComitenteService comitenteService;
+    
+    @Autowired
+    private MercadoService mercadoService;
     
     public ComitenteController(ComitenteService comitenteService) {
         this.comitenteService = comitenteService;
@@ -51,11 +57,18 @@ public class ComitenteController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Comitente> updateComitente(@PathVariable Long id, @RequestBody Comitente comitente) {
+    public ResponseEntity<Comitente> updateComitente(@PathVariable Long id, @RequestBody ComitenteDTO comitenteDTO) {
+    	Optional<Comitente> existingComitente = comitenteService.getComitenteById(id);
         if (!comitenteService.getComitenteById(id).isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        comitente.setId(id);
+        
+        Comitente comitente = existingComitente.get();
+        comitente.setDescripcion(comitenteDTO.getDescripcion());
+        
+        List<Mercado> mercados = mercadoService.findByIds(comitenteDTO.getMercadoIds());
+        comitente.setMercados(mercados);
+
         Comitente updatedComitente = comitenteService.save(comitente);
         return ResponseEntity.ok(updatedComitente);
     }
@@ -69,20 +82,11 @@ public class ComitenteController {
         return ResponseEntity.noContent().build();
     }
     
-    
-
-    /*@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Comitente> createComitente(@RequestBody Comitente comitente) {
-        Comitente created = comitenteService.saveComitente(comitente);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }*/
-    
     @GetMapping("/pais/{pais}")
     public ResponseEntity<List<Comitente>> getComitentesByPais(@PathVariable NombrePais pais) {
         List<Comitente> comitentes = comitenteService.getComitentesByPais(pais);
         if (comitentes.isEmpty()) {
-            return ResponseEntity.noContent().build(); // Devuelve 204 si no hay contenido
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(comitentes);
     }

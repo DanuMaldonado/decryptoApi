@@ -7,4 +7,5 @@ import com.decrypto.api.decrypto.model.Mercado;
 public interface MercadoRepository extends JpaRepository<Mercado, Long> { 
 	
 	Optional<Mercado> findByCodigo(String codigo);
+
 }

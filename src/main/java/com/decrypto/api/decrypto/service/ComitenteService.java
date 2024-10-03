@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.decrypto.api.decrypto.dto.ComitenteDTO;
@@ -15,10 +14,8 @@ import com.decrypto.api.decrypto.dto.StatsDTO;
 import com.decrypto.api.decrypto.model.Comitente;
 import com.decrypto.api.decrypto.model.Mercado;
 import com.decrypto.api.decrypto.model.NombrePais;
-import com.decrypto.api.decrypto.model.Pais;
 import com.decrypto.api.decrypto.repository.ComitenteRepository;
 import com.decrypto.api.decrypto.repository.MercadoRepository;
-import com.decrypto.api.decrypto.repository.PaisRepository;
 
 @Service
 public class ComitenteService {
@@ -43,33 +40,6 @@ public class ComitenteService {
                 savedComitente.getMercados().stream().map(Mercado::getId).collect(Collectors.toList()));
     }
     
-    
-    /*public Comitente saveComitente(Comitente comitente) {
-        Optional<Comitente> existing = comitenteRepository.findByDescripcion(comitente.getDescripcion());
-        if (existing.isPresent()) {
-            throw new IllegalArgumentException("El comitente ya existe.");
-        }
-            
-            Pais pais = comitente.getMercados().stream()
-                    .map(Mercado::getPais)
-                    .findFirst() // Asumimos que todos los mercados tienen el mismo país
-                    .orElseThrow(() -> new IllegalArgumentException("El comitente debe tener al menos un mercado con un país asociado."));
-                
-                Optional<Pais> existingPais = paisRepository.findByNombre(pais.getNombre());
-                if (existingPais.isPresent()) {
-                    comitente.getMercados().forEach(mercado -> mercado.setPais(existingPais.get()));
-                }
-
-                // Verificar si los mercados ya existen
-                comitente.getMercados().forEach(mercado -> {
-                    Optional<Mercado> existingMercado = mercadoRepository.findByCodigo(mercado.getCodigo());
-                    if (existingMercado.isPresent()) {
-                        mercado.setId(existingMercado.get().getId());
-                    }
-                });
-        
-        return comitenteRepository.save(comitente);
-    }*/
     
     public List<StatsDTO> getStats() {
         List<StatsDTO> stats = new ArrayList<>();

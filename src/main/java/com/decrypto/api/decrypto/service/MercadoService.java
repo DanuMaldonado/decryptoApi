@@ -2,6 +2,7 @@ package com.decrypto.api.decrypto.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,14 @@ public class MercadoService {
 
     public Optional<Mercado> findById(Long id) {
         return mercadoRepository.findById(id);
+    }
+    
+    public List<Mercado> findByIds(List<Long> ids) {
+        return ids.stream()
+                  .map(mercadoRepository::findById)
+                  .filter(Optional::isPresent)
+                  .map(Optional::get)
+                  .collect(Collectors.toList());
     }
 
     public Mercado save(Mercado mercado) {
