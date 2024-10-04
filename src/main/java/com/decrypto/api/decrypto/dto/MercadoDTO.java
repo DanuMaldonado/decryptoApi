@@ -5,16 +5,18 @@ public class MercadoDTO {
     private String codigo;
     private String descripcion;
     private Long paisId;
+    private Double porcentaje;
 
     // Constructor vacío
     public MercadoDTO() {}
 
     // Constructor con parámetros
-    public MercadoDTO(Long id, String codigo, String descripcion, Long paisId) {
+    public MercadoDTO(Long id, String codigo, String descripcion, Long paisId, Double porcentaje) {
         this.id = id;
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.paisId = paisId;
+        this.porcentaje = porcentaje;
     }
 
     public Long getId() {
@@ -48,4 +50,13 @@ public class MercadoDTO {
     public void setPaisId(Long paisId) {
         this.paisId = paisId;
     }
+
+	public Double getPorcentaje() {
+		return porcentaje;
+	}
+
+	public void setPorcentaje(Double porcentaje) {
+		this.porcentaje = porcentaje;
+	}
+
 }
