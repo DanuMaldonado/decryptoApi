@@ -1,5 +1,6 @@
 package com.decrypto.api.decrypto.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,5 +17,9 @@ public class PaisService {
 	 public Optional<Pais> getPaisById(Long id) {
 	        return paisRepository.findById(id);
 	    }
+
+	public List<Pais> getAllPaises() {
+		return paisRepository.findAll();
+	}
 
 }
