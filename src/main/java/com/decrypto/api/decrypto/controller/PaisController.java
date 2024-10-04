@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.decrypto.api.decrypto.model.Comitente;
 import com.decrypto.api.decrypto.model.Pais;
 import com.decrypto.api.decrypto.service.PaisService;
 
