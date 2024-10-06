@@ -39,6 +39,9 @@ public class MercadoService {
     }
 
     public MercadoDTO save(MercadoDTO mercadoDTO) {
+    	
+    	
+    	
         // Buscar el país por ID desde el servicio PaisService
         Optional<Pais> paisOptional = paisService.getPaisById(mercadoDTO.getPaisId());
         

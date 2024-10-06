@@ -42,21 +42,18 @@ public class DataLoader implements CommandLineRunner {
         mercadoMAE.setCodigo("MAE");
         mercadoMAE.setDescripcion("Mercado Abierto Electrónico");
         mercadoMAE.setPais(argentina);
-        mercadoMAE.setPorcentaje(15.20);
         mercadoRepository.save(mercadoMAE);
 
         Mercado mercadoROFEX = new Mercado();
         mercadoROFEX.setCodigo("ROFEX");
         mercadoROFEX.setDescripcion("Mercado a Término de Rosario");
         mercadoROFEX.setPais(argentina);
-        mercadoROFEX.setPorcentaje(40.75);
         mercadoRepository.save(mercadoROFEX);
         
         Mercado mercadoUFEX = new Mercado();
         mercadoUFEX.setCodigo("UFEX");
         mercadoUFEX.setDescripcion("Mercado de Futuros y Opciones");
         mercadoUFEX.setPais(uruguay);
-        mercadoUFEX.setPorcentaje(44.05);
         mercadoRepository.save(mercadoUFEX);
 
         // Agregar comitentes
@@ -65,11 +62,6 @@ public class DataLoader implements CommandLineRunner {
         comitente1.getMercados().add(mercadoMAE);
         comitenteRepository.save(comitente1);
         
-        Comitente comitente1B = new Comitente();
-        comitente1B.setDescripcion("Comitente 1B");
-        comitente1B.getMercados().add(mercadoMAE);
-        comitenteRepository.save(comitente1B);
-
         Comitente comitente2 = new Comitente();
         comitente2.setDescripcion("Comitente 2");
         comitente2.getMercados().add(mercadoROFEX);

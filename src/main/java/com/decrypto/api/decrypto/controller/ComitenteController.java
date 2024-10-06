@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.decrypto.api.decrypto.dto.ComitenteDTO;
-import com.decrypto.api.decrypto.dto.StatsDTO;
 import com.decrypto.api.decrypto.model.Comitente;
 import com.decrypto.api.decrypto.model.Mercado;
 import com.decrypto.api.decrypto.model.NombrePais;
@@ -91,11 +90,5 @@ public class ComitenteController {
         return ResponseEntity.ok(comitentes);
     }
     
-    @GetMapping("/stats")
-    public ResponseEntity<List<StatsDTO>> getStats() {
-        return ResponseEntity.ok(comitenteService.getStats());
-    }
-    
-
 
 }
