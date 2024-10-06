@@ -14,6 +14,8 @@ import com.decrypto.api.decrypto.model.Pais;
 import com.decrypto.api.decrypto.service.MercadoService;
 import com.decrypto.api.decrypto.service.PaisService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/api/mercados")
 public class MercadoController {
@@ -25,6 +27,7 @@ public class MercadoController {
     private PaisService paisService;
 
     // Obtener todos los mercados (GET)
+    @Operation(summary = "Obtener todos los mercados", description = "Devuelve una lista de todos los mercados disponibles.")
     @GetMapping
     public ResponseEntity<List<Mercado>> getAllMercados() {
         List<Mercado> mercados = mercadoService.findAll();
