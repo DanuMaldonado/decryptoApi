@@ -24,7 +24,7 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private PaisRepository paisRepository;
-
+    
     @Override
     public void run(String... args) throws Exception {
         // Limpiar la base de datos antes de agregar nuevos datos
@@ -71,5 +71,11 @@ public class DataLoader implements CommandLineRunner {
         comitente3.setDescripcion("Comitente 3");
         comitente3.getMercados().add(mercadoUFEX);
         comitenteRepository.save(comitente3);
+        
+        Comitente comitente4 = new Comitente();
+        comitente4.setDescripcion("Comitente 4");
+        comitente4.getMercados().add(mercadoUFEX);
+        comitenteRepository.save(comitente4);
+        
     }
 }

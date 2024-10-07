@@ -81,7 +81,7 @@ public class Mercado {
     }
     
 	public Double getPorcentaje() {
-		return porcentaje;
+		return this.porcentaje;
 	}
 
 	public void setPorcentaje(Double porcentaje) {

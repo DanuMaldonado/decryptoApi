@@ -8,24 +8,27 @@ public class StatsDTO {
     private String country;
     private List<Map<String, Map<String, String>>> market;
 
+    
     public StatsDTO(String country, List<Map<String, Map<String, String>>> market) {
         this.country = country;
-        this.market = market;
+        this.setMarket(market);
     }
 
-	public String getCountry() {
-		return country;
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+	public List<Map<String, Map<String, String>>> getMarket() {
+		return market;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
+	public void setMarket(List<Map<String, Map<String, String>>> market) {
+		this.market = market;
 	}
 
-    public List<Map<String, Map<String, String>>> getMarket() {
-        return market;
-    }
 
-    public void setMarket(List<Map<String, Map<String, String>>> market) {
-        this.market = market;
-    }
 }

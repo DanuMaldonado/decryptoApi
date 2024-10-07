@@ -23,7 +23,7 @@ import com.decrypto.api.decrypto.service.ComitenteService;
 import com.decrypto.api.decrypto.service.MercadoService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/comitente")
 public class ComitenteController {
     
     @Autowired

@@ -21,16 +21,19 @@ public class MercadoService {
     
     @Autowired
     private PaisService paisService;
+ 
 
     public List<Mercado> findAll() {
         return mercadoRepository.findAll();
     }
 
     public Optional<Mercado> findById(Long id) {
+    	
         return mercadoRepository.findById(id);
     }
     
     public List<Mercado> findByIds(List<Long> ids) {
+    //	statsService.actualizarPorcentajes();
         return ids.stream()
                   .map(mercadoRepository::findById)
                   .filter(Optional::isPresent)
@@ -39,8 +42,7 @@ public class MercadoService {
     }
 
     public MercadoDTO save(MercadoDTO mercadoDTO) {
-    	
-    	
+    	//statsService.actualizarPorcentajes();
     	
         // Buscar el país por ID desde el servicio PaisService
         Optional<Pais> paisOptional = paisService.getPaisById(mercadoDTO.getPaisId());
@@ -78,8 +80,8 @@ public class MercadoService {
         return savedMercadoDTO;
 
     }
-
     public void deleteById(Long id) {
+    	//statsService.actualizarPorcentajes();
         mercadoRepository.deleteById(id);
     }
 }
