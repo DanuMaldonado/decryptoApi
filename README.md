@@ -85,12 +85,86 @@ Para ejecutar este proyecto localmente, necesitarás tener instalados los siguie
 		PUT /api/comitentes/{id}: Actualiza un comitente existente.
 		DELETE /api/comitentes/{id}: Elimina un comitente por ID.
 
+		6.1.1 Estructuras de JSON
+
+				GET /api/comitentes:
+
+				{
+					"id": 1,
+					"descripcion": "Comitente Principal",
+					"mercados": [
+					{
+						"id": 1,
+						"codigo": "MERC001",
+						"descripcion": "Mercado de Buenos Aires",
+						"pais": "ARGENTINA",
+						"porcentaje": 50.0
+						},
+						{
+						"id": 2,
+						"codigo": "MERC002",
+						"descripcion": "Mercado de Montevideo",
+						"pais": "URUGUAY",
+						"porcentaje": 50.0
+					}
+				]
+				}
+
+				POST /api/comitentes:
+
+				{
+					"descripcion": "Nuevo Comitente",
+					"mercadoIds": [1, 2]  // IDs de mercados existentes
+				}
+
+				PUT /api/comitentes/{id}
+
+				{
+					"id": 1,
+					"descripcion": "Comitente Actualizado",
+					"mercadoIds": [1]  // IDs de los mercados actualizados
+				}
+
 	6.2. Mercados
 
 		GET /api/mercados: Lista todos los mercados.
 		POST /api/mercados: Crea un nuevo mercado.
 		PUT /api/mercados/{id}: Actualiza un mercado existente.
 		DELETE /api/mercados/{id}: Elimina un mercado por ID.
+
+			6.2.1 Estructuras de JSON
+
+				GET /api/mercados
+
+					{
+						"id": 1,
+						"codigo": "MERC001",
+						"descripcion": "Mercado de Buenos Aires",
+						"pais": {
+							"id": 1,
+							"nombre": "ARGENTINA"
+						},
+						"porcentaje": 50.0
+					}
+
+				POST /api/mercados
+
+					{
+						"codigo": "MERC003",
+						"descripcion": "Nuevo Mercado en Córdoba",
+						"paisId": 1,  // ID del país, Argentina
+						"porcentaje": 20.0
+					}
+
+				PUT /api/mercados/{id}
+
+					{
+						"id": 1,
+						"codigo": "MERC001",
+						"descripcion": "Mercado de Buenos Aires Actualizado",
+						"paisId": 1,  // ID de Argentina
+						"porcentaje": 45.0
+					}
 
 	6.3. Países
 
