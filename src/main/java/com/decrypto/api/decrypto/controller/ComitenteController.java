@@ -21,6 +21,7 @@ import com.decrypto.api.decrypto.model.Mercado;
 import com.decrypto.api.decrypto.model.NombrePais;
 import com.decrypto.api.decrypto.service.ComitenteService;
 import com.decrypto.api.decrypto.service.MercadoService;
+import com.decrypto.api.decrypto.service.StatsService;
 
 @RestController
 @RequestMapping("/api/comitente")
@@ -32,12 +33,16 @@ public class ComitenteController {
     @Autowired
     private MercadoService mercadoService;
     
+    @Autowired
+    private StatsService statsService;
+    
     public ComitenteController(ComitenteService comitenteService) {
         this.comitenteService = comitenteService;
     }
     
     @GetMapping
     public List<Comitente> getAllComitentes() {
+    	statsService.actualizarPorcentajes();
         return comitenteService.getAllComitentes();
     }
 
@@ -51,7 +56,8 @@ public class ComitenteController {
     
     @PostMapping
     public ResponseEntity<ComitenteDTO> createComitente(@RequestBody ComitenteDTO comitenteDTO) {
-        ComitenteDTO savedComitenteDTO = comitenteService.save(comitenteDTO);
+        ComitenteDTO savedComitenteDTO = comitenteService.createComitente(comitenteDTO);
+        statsService.actualizarPorcentajes();
         return ResponseEntity.status(HttpStatus.CREATED).body(savedComitenteDTO);
     }
     
@@ -68,7 +74,8 @@ public class ComitenteController {
         List<Mercado> mercados = mercadoService.findByIds(comitenteDTO.getMercadoIds());
         comitente.setMercados(mercados);
 
-        Comitente updatedComitente = comitenteService.save(comitente);
+        Comitente updatedComitente = comitenteService.updateComitente(comitente);
+        statsService.actualizarPorcentajes();
         return ResponseEntity.ok(updatedComitente);
     }
 

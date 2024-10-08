@@ -22,17 +22,18 @@ import java.util.stream.Collectors;
 @Service
 public class StatsService {
 
-	private final ComitenteRepository comitenteRepository;
-	
-	private final MercadoRepository mercadoRepository;
-	
-	private final PaisRepository paisRepository;
+	@Autowired
+    private ComitenteRepository comitenteRepository;
 
     @Autowired
-    public StatsService(ComitenteRepository comitenteRepository, MercadoRepository mercadoRepository, PaisRepository paisRepository) {
-        this.comitenteRepository = comitenteRepository;
-        this.mercadoRepository = mercadoRepository;
-        this.paisRepository = paisRepository;
+    private MercadoRepository mercadoRepository;
+
+    @Autowired
+    private PaisRepository paisRepository;
+    
+    
+    public void actualizarPorcentajes() {
+        getStats();
     }
     
     public List<StatsDTO> getStats() {

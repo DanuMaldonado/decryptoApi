@@ -7,6 +7,8 @@ import com.decrypto.api.decrypto.model.Pais;
 import com.decrypto.api.decrypto.repository.ComitenteRepository;
 import com.decrypto.api.decrypto.repository.MercadoRepository;
 import com.decrypto.api.decrypto.repository.PaisRepository;
+import com.decrypto.api.decrypto.service.StatsService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,8 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private PaisRepository paisRepository;
+    
+    private StatsService statsService;
     
     @Override
     public void run(String... args) throws Exception {
@@ -58,22 +62,22 @@ public class DataLoader implements CommandLineRunner {
 
         // Agregar comitentes
         Comitente comitente1 = new Comitente();
-        comitente1.setDescripcion("Comitente 1");
+        comitente1.setDescripcion("Comitente MAE1");
         comitente1.getMercados().add(mercadoMAE);
         comitenteRepository.save(comitente1);
         
         Comitente comitente2 = new Comitente();
-        comitente2.setDescripcion("Comitente 2");
+        comitente2.setDescripcion("Comitente ROFEX1");
         comitente2.getMercados().add(mercadoROFEX);
         comitenteRepository.save(comitente2);
         
         Comitente comitente3 = new Comitente();
-        comitente3.setDescripcion("Comitente 3");
+        comitente3.setDescripcion("Comitente UFEX1");
         comitente3.getMercados().add(mercadoUFEX);
         comitenteRepository.save(comitente3);
         
         Comitente comitente4 = new Comitente();
-        comitente4.setDescripcion("Comitente 4");
+        comitente4.setDescripcion("Comitente UFEX2");
         comitente4.getMercados().add(mercadoUFEX);
         comitenteRepository.save(comitente4);
         
