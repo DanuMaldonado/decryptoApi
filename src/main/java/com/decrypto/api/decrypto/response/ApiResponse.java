@@ -10,6 +10,7 @@ public class ApiResponse {
     private String url;
     private String timestamp;
 
+    // Constructor adicional sin url
     public ApiResponse(boolean success, String message, String url, String timestamp) {
         this.success = success;
         this.message = message;

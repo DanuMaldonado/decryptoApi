@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.decrypto.api.decrypto.dto.StatsDTO;
 import com.decrypto.api.decrypto.service.ComitenteService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import java.util.List;
 
 @RestController
@@ -18,11 +21,12 @@ public class StatsController {
         this.comitenteService = comitenteService;
     }
 
-    //@GetMapping("/stats")
-    //public List<StatsDTO> getStatsdeprecated() {
-    //    return statsService.getStats(); // Llamar al servicio para obtener las estadísticas
-   // }
-    
+    /**
+     * Obtiene las estadísticas de distribución de comitentes por país y mercado.
+     * @return Lista de estadísticas con porcentajes por país y mercado.
+     */
+    @Operation(summary = "Obtener estadísticas", description = "Devuelve estadísticas de distribución de comitentes por país y mercado.")
+    @ApiResponse(responseCode = "200", description = "Devuelve el listado totalizado de los comitentes por pais y mercado")
     @GetMapping("/stats")
     public ResponseEntity<List<StatsDTO>> getStats() {
     	List<StatsDTO> stats = comitenteService.getStats();

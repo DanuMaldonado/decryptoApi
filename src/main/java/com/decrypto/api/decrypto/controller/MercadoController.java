@@ -13,8 +13,11 @@ import com.decrypto.api.decrypto.model.Mercado;
 import com.decrypto.api.decrypto.model.Pais;
 import com.decrypto.api.decrypto.service.MercadoService;
 import com.decrypto.api.decrypto.service.PaisService;
+import com.decrypto.api.decrypto.service.StatsService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/mercados")
@@ -25,33 +28,68 @@ public class MercadoController {
     
     @Autowired
     private PaisService paisService;
+    
+    @Autowired
+    private StatsService statsService;
 
-    // Obtener todos los mercados (GET)
+    /**
+     * Obtiene todos los mercados.
+     * @return Lista de todos los mercados.
+     */
     @Operation(summary = "Obtener todos los mercados", description = "Devuelve una lista de todos los mercados disponibles.")
+    @ApiResponse(responseCode = "200", description = "Devuelve lista de mercados en formato Json")
     @GetMapping
     public ResponseEntity<List<Mercado>> getAllMercados() {
         List<Mercado> mercados = mercadoService.findAll();
         return ResponseEntity.ok(mercados);
     }
 
-    // Obtener un mercado por su ID (GET)
+    /**
+     * Obtiene un mercado por su ID.
+     * @param id ID del mercado.
+     * @return Mercado si existe, o un error 404 si no se encuentra.
+     */
+    @Operation(summary = "Obtener un mercado por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Mercado encontrado"),
+        @ApiResponse(responseCode = "404", description = "Mercado no encontrado")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Mercado> getMercadoById(@PathVariable Long id) {
         Optional<Mercado> mercado = mercadoService.findById(id);
         return mercado.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Crear un nuevo mercado (POST)
+    /**
+     * Crea un nuevo mercado.
+     * @param mercadoDTO Datos del mercado a crear.
+     * @return Mercado creado.
+     */
+    @Operation(summary = "Crear un nuevo mercado")
+    @ApiResponse(responseCode = "201", description = "Mercado creado exitosamente")
     @PostMapping
     public ResponseEntity<MercadoDTO> createMercado(@RequestBody MercadoDTO mercadoDTO) {
         MercadoDTO savedMercadoDTO = mercadoService.save(mercadoDTO);
+        statsService.actualizarPorcentajes();
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMercadoDTO);
         
     }
    
-    // Actualizar un mercado existente (PUT)
+    /**
+     * Actualiza un mercado existente.
+     * @param id ID del mercado a actualizar.
+     * @param mercadoDTO Datos actualizados del mercado.
+     * @return Mercado actualizado, o un error 404 si no se encuentra.
+     */
+    @Operation(summary = "Actualizar un mercado existente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Mercado actualizado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Mercado no encontrado"),
+        @ApiResponse(responseCode = "400", description = "País no encontrado")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<MercadoDTO> updateMercado(@PathVariable Long id, @RequestBody MercadoDTO mercadoDTO) {
+    	
         // Buscar el mercado existente por ID
         Optional<Mercado> existingMercado = mercadoService.findById(id);
         
@@ -81,13 +119,23 @@ public class MercadoController {
     }
 
 
-    // Eliminar un mercado por su ID (DELETE)
+    /**
+     * Elimina un mercado por su ID.
+     * @param id ID del mercado.
+     * @return Respuesta vacía si se elimina correctamente, o un error 404 si no se encuentra.
+     */
+    @Operation(summary = "Eliminar un mercado por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Mercado eliminado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Mercado no encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMercado(@PathVariable Long id) {
         Optional<Mercado> existingMercado = mercadoService.findById(id);
         if (!existingMercado.isPresent()) {
             return ResponseEntity.notFound().build();
         }
+        statsService.actualizarPorcentajes();
         mercadoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

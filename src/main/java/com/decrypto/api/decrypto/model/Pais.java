@@ -3,6 +3,9 @@ package com.decrypto.api.decrypto.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Clase que representa un país en el sistema.
+ */
 @Entity
 public class Pais {
     @Id

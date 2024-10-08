@@ -12,6 +12,11 @@ import com.decrypto.api.decrypto.repository.ComitenteRepository;
 import com.decrypto.api.decrypto.repository.MercadoRepository;
 import com.decrypto.api.decrypto.repository.PaisRepository;
 
+import io.swagger.v3.oas.annotations.Operation; 
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse; 
+
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,31 +36,36 @@ public class StatsService {
     @Autowired
     private PaisRepository paisRepository;
     
-    
+    @Operation(summary = "Actualizar porcentajes de mercados", description = "Actualiza los porcentajes de los mercados basados en los comitentes.")
     public void actualizarPorcentajes() {
         getStats();
     }
     
+    @Operation(summary = "Obtener estadísticas de comitentes", description = "Retorna estadísticas de comitentes y sus porcentajes por país y mercado.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Estadísticas obtenidas con éxito"),
+        @ApiResponse(responseCode = "404", description = "No se encontraron comitentes")
+    })
     public List<StatsDTO> getStats() {
         List<StatsDTO> stats = new ArrayList<>();
         List<Comitente> comitentes = comitenteRepository.findAll();
 
-        // 1. Calcular el total de comitentes por país
+        // Calcular el total de comitentes por país
         Map<NombrePais, Long> comitentesPorPais = comitentes.stream()
             .flatMap(comitente -> comitente.getMercados().stream())
             .collect(Collectors.groupingBy(mercado -> mercado.getPais().getNombre(), Collectors.counting()));
 
-        // 2. Calcular el total de comitentes (todos los países)
+        // Calcular el total de comitentes (todos los países)
         long totalComitentes = comitentes.size();
 
-        // 3. Calcular el porcentaje de comitentes por país
+        // Calcular el porcentaje de comitentes por país
         Map<NombrePais, Double> porcentajePorPais = new HashMap<>();
         for (Map.Entry<NombrePais, Long> entry : comitentesPorPais.entrySet()) {
             double porcentajePais = (entry.getValue() * 100.0) / totalComitentes;
             porcentajePorPais.put(entry.getKey(), porcentajePais);
         }
 
-        // 4. Calcular el porcentaje por mercado en cada país
+        // Calcular el porcentaje por mercado en cada país
         Map<NombrePais, Map<String, Double>> mercadoPorcentajes = new HashMap<>();
         for (Comitente comitente : comitentes) {
             for (Mercado mercado : comitente.getMercados()) {
@@ -70,7 +80,7 @@ public class StatsService {
             }
         }
 
-        // 5. Ajustar los porcentajes de mercados dentro del porcentaje total del país
+        // Ajustar los porcentajes de mercados dentro del porcentaje total del país
         for (Map.Entry<NombrePais, Map<String, Double>> entry : mercadoPorcentajes.entrySet()) {
             NombrePais pais = entry.getKey();
             Map<String, Double> mercados = entry.getValue();

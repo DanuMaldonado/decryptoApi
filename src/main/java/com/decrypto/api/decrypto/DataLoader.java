@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * Clase que carga datos iniciales en la base de datos al iniciar la aplicación.
+ */
 @Component
 public class DataLoader implements CommandLineRunner {
 
@@ -27,8 +30,15 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private PaisRepository paisRepository;
     
-    private StatsService statsService;
     
+    
+    /**
+     * Método que se ejecuta al iniciar la aplicación.
+     * Limpia la base de datos y carga datos iniciales.
+     * 
+     * @param args argumentos de línea de comandos
+     * @throws Exception si ocurre un error durante la ejecución
+     */
     @Override
     public void run(String... args) throws Exception {
         // Limpiar la base de datos antes de agregar nuevos datos

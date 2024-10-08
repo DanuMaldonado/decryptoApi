@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.decrypto.api.decrypto.model.Pais;
 import com.decrypto.api.decrypto.service.PaisService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/api/paises")
 public class PaisController {
@@ -20,11 +24,28 @@ public class PaisController {
 	private PaisService paisService;
 	
 	
-	@GetMapping
+	 /**
+     * Obtiene todos los países.
+     * @return Lista de todos los países.
+     */
+    @Operation(summary = "Obtener todos los países", description = "Devuelve una lista de todos los países disponibles.")
+    @ApiResponse(responseCode = "200", description = "Devuelve listado de paises en formato Json")
+    @GetMapping
     public List<Pais> getAllPaises() {
         return paisService.getAllPaises();
     }
 	
+    
+    /**
+     * Obtiene un país por su ID.
+     * @param id ID del país.
+     * @return País si existe, o un error 404 si no se encuentra.
+     */
+    @Operation(summary = "Obtener un país por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "País encontrado"),
+        @ApiResponse(responseCode = "404", description = "País no encontrado")
+    })
 	@GetMapping("/{id}")
 	public ResponseEntity<Pais> getPaisById(@PathVariable Long id) {
 	   return paisService.getPaisById(id)

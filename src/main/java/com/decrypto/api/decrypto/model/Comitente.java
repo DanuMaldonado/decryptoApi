@@ -16,15 +16,19 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotEmpty;
 
-
+/**
+ * Clase que representa un Comitente en el sistema.
+ * Un Comitente puede estar relacionado con múltiples Mercados.
+ */
 @Entity
 public class Comitente {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 	@Column(unique = true)
-    @NotEmpty // Añadir validación
+    @NotEmpty 
     private String descripcion;
 
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -38,7 +42,7 @@ public class Comitente {
     // Constructor vacío
     public Comitente() {}
 
-    // Constructor
+    // Constructor con parámetros
     public Comitente(String descripcion, List<Mercado> mercados) {
         this.descripcion = descripcion;
         this.mercados = mercados;
@@ -68,7 +72,6 @@ public class Comitente {
 		this.id = id;
 	}
 
-    // Override toString(), equals(), and hashCode()
     @Override
     public String toString() {
         return "Comitente{id=" + id + ", descripcion='" + descripcion + '\'' + ", mercados=" + mercados + '}';

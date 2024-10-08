@@ -8,6 +8,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
+/**
+ * Clase que representa un Mercado en el sistema.
+ * Un Mercado está relacionado con un País y puede tener múltiples Comitentes.
+ */
 @Entity
 public class Mercado {
     @Id
@@ -25,7 +29,7 @@ public class Mercado {
     private Pais pais;
 
     @ManyToMany(mappedBy = "mercados")
-    @JsonBackReference
+    @JsonBackReference // Evita problemas de recursividad en la serialización
     private List<Comitente> comitentes = new ArrayList<>();
     
     private Double porcentaje;

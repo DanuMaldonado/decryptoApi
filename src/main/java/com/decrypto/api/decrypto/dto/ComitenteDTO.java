@@ -2,9 +2,19 @@ package com.decrypto.api.decrypto.dto;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+@Schema(description = "DTO para la entidad Comitente, contiene la descripción y los IDs de los mercados asociados.")
 public class ComitenteDTO {
+	
+	@Schema(description = "ID único del comitente", example = "1")
     private Long id;
+	
+	@Schema(description = "Descripción del comitente", example = "Comitente MAE1")
     private String descripcion;
+	
+    @Schema(description = "Lista de IDs de los mercados asociados al comitente", example = "[1, 2, 3]")
     private List<Long> mercadoIds;
 
     // Constructor vacío

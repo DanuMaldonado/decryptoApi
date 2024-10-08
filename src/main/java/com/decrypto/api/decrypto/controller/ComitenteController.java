@@ -18,13 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.decrypto.api.decrypto.dto.ComitenteDTO;
 import com.decrypto.api.decrypto.model.Comitente;
 import com.decrypto.api.decrypto.model.Mercado;
-import com.decrypto.api.decrypto.model.NombrePais;
 import com.decrypto.api.decrypto.service.ComitenteService;
 import com.decrypto.api.decrypto.service.MercadoService;
 import com.decrypto.api.decrypto.service.StatsService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
-@RequestMapping("/api/comitente")
+@RequestMapping("/api/comitentes")
 public class ComitenteController {
     
     @Autowired
@@ -40,12 +43,28 @@ public class ComitenteController {
         this.comitenteService = comitenteService;
     }
     
+    /**
+     * Obtiene todos los comitentes.
+     * @return Lista de comitentes.
+     */
+    @Operation(summary = "Obtener todos los comitentes")
+    @ApiResponse(responseCode = "200", description = "Devuelve listado de comitentes en formato Json")
     @GetMapping
     public List<Comitente> getAllComitentes() {
     	statsService.actualizarPorcentajes();
         return comitenteService.getAllComitentes();
     }
 
+    /**
+     * Obtiene un comitente por su ID.
+     * @param id ID del comitente.
+     * @return Comitente si existe, o un error 404 si no se encuentra.
+     */
+    @Operation(summary = "Obtener un comitente por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Comitente encontrado"),
+        @ApiResponse(responseCode = "404", description = "Comitente no encontrado")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Comitente> getComitenteById(@PathVariable Long id) {
         return comitenteService.getComitenteById(id)
@@ -54,6 +73,13 @@ public class ComitenteController {
     }
     
     
+    /**
+     * Crea un nuevo comitente.
+     * @param comitenteDTO Datos del comitente a crear.
+     * @return Comitente creado.
+     */
+    @Operation(summary = "Crear un nuevo comitente")
+    @ApiResponse(responseCode = "201", description = "Comitente creado exitosamente")
     @PostMapping
     public ResponseEntity<ComitenteDTO> createComitente(@RequestBody ComitenteDTO comitenteDTO) {
         ComitenteDTO savedComitenteDTO = comitenteService.createComitente(comitenteDTO);
@@ -61,6 +87,17 @@ public class ComitenteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedComitenteDTO);
     }
     
+    /**
+     * Actualiza un comitente existente.
+     * @param id ID del comitente a actualizar.
+     * @param comitenteDTO Datos actualizados del comitente.
+     * @return Comitente actualizado, o un error 404 si no se encuentra.
+     */
+    @Operation(summary = "Actualizar un comitente existente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Comitente actualizado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Comitente no encontrado")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Comitente> updateComitente(@PathVariable Long id, @RequestBody ComitenteDTO comitenteDTO) {
     	Optional<Comitente> existingComitente = comitenteService.getComitenteById(id);
@@ -79,6 +116,16 @@ public class ComitenteController {
         return ResponseEntity.ok(updatedComitente);
     }
 
+    /**
+     * Elimina un comitente por su ID.
+     * @param id ID del comitente.
+     * @return Respuesta vacía si se elimina correctamente, o un error 404 si no se encuentra.
+     */
+    @Operation(summary = "Eliminar un comitente por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Comitente eliminado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Comitente no encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComitente(@PathVariable Long id) {
         if (!comitenteService.getComitenteById(id).isPresent()) {
@@ -86,15 +133,6 @@ public class ComitenteController {
         }
         comitenteService.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
-    
-    @GetMapping("/pais/{pais}")
-    public ResponseEntity<List<Comitente>> getComitentesByPais(@PathVariable NombrePais pais) {
-        List<Comitente> comitentes = comitenteService.getComitentesByPais(pais);
-        if (comitentes.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(comitentes);
     }
     
 
